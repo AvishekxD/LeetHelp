@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LeetCode Hinglish Helper - Settings</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; width: 350px; }
+    input { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
+    button { background: #ffa116; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; font-weight: bold; }
+    button:hover { background: #e59412; }
+    #status { margin-top: 15px; font-weight: bold; }
+    .instructions { background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
+    .instructions a { color: #007bff; }
+  </style>
+</head>
+<body>
+  <h2>Set Your Gemini API Key</h2>
+  
+  <div class="instructions">
+    <p>This extension requires a **Gemini API Key** to translate problems.</p>
+    <p>
+      1. Get your key here: 
+      <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio (Gemini)</a>
+    </p>
+    <p>2. Enter and save the key below. We will validate it automatically.</p>
+  </div>
+  
+  <input type="text" id="apiKey" placeholder="Enter Gemini API Key (e.g., AIzaSy...)" />
+  <button id="saveKey">Save & Validate Key</button>
+  <div id="status"></div>
+  <script src="options.js"></script>
+</body>
+</html>
