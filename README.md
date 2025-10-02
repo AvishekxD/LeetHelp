@@ -4,7 +4,9 @@ _LeetHelp is a lightweight Chrome extension built to help students and developer
 ---
 
 ## 📸 Screenshots
-will add later..
+
+<img src="icons/image.png" alt="Hero-Section" width="800" height="482"/>
+<img src="icons/image-1.png" alt="Hero-Section" width="800" height="482"/>
 
 ---
 
