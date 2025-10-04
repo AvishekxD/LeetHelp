@@ -5,8 +5,8 @@ const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-
  */
 async function validateApiKey(key) {
   const statusElement = document.getElementById("status");
-  statusElement.innerText = "⏳ Validating key...";
-  statusElement.style.color = "orange";
+  statusElement.innerText = "Validating key...";
+  statusElement.style.color = "green";
 
   try {
     const response = await fetch(`${API_URL}?key=${key}`, {
@@ -45,7 +45,7 @@ document.getElementById("saveKey").addEventListener("click", async () => {
   const statusElement = document.getElementById("status");
 
   if (!key) {
-    statusElement.innerText = "⚠️ Please enter a valid key.";
+    statusElement.innerText = "Please enter a valid key.";
     statusElement.style.color = "red";
     return;
   }
@@ -54,14 +54,14 @@ document.getElementById("saveKey").addEventListener("click", async () => {
 
   if (isValid) {
     chrome.storage.local.set({ geminiApiKey: key }, () => {
-      statusElement.innerText = "✅ API Key saved and validated! Closing tab...";
-      statusElement.style.color = "green";
+      statusElement.innerText = "API Key saved and validated! You can close this tab.";
+      statusElement.style.color = "white";
       
       // Send message to background script to close the tab
       chrome.runtime.sendMessage({ action: "keySavedAndValidated" });
     });
   } else {
-    statusElement.innerText = "❌ Invalid API Key. Please check your key and try again.";
+    statusElement.innerText = "Invalid API Key. Please check your key and try again.";
     statusElement.style.color = "red";
   }
 });

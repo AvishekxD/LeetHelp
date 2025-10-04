@@ -1,32 +1,283 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LeetCode Hinglish Helper - Settings</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; width: 350px; }
-    input { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
-    button { background: #ffa116; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; font-weight: bold; }
-    button:hover { background: #e59412; }
-    #status { margin-top: 15px; font-weight: bold; }
-    .instructions { background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
-    .instructions a { color: #007bff; }
-  </style>
+    <title>LeetHelp</title>
+    <link rel="icon" type="icon" href="/icons/favicon.ico">
+    <style>
+        :root {
+            --charcoal-bg: #121212;
+            --box-charcoal: #1e1e1e;
+            --accent-color: #fff;
+            --text-color: #f0f0f0;
+            --light-text: #a0a0a0;
+        }
+
+        /* 1. Global & Dark Mode Setup */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--charcoal-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            /* Hide excess animation elements */
+        }
+
+        /* 2. Container Styling (The Card) */
+        .container {
+            width: 380px;
+            padding: 25px;
+            background-color: var(--box-charcoal);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            position: relative;
+            /* Needed to keep content above background */
+            z-index: 10;
+        }
+
+        /* 3. Typography & Headings */
+        h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        /* 4. Input Fields */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #3c3c3c;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            /* Darker input field */
+            color: var(--text-color);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            /* New accent color on focus */
+            outline: none;
+        }
+
+        ::placeholder {
+            color: var(--light-text);
+        }
+
+        /* 5. Save Button (New Accent Color) */
+        button {
+            background: var(--accent-color);
+            color: var(--charcoal-bg);
+            /* Dark text for contrast */
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        button:hover {
+            background: #e0e0e0;
+            /* Slightly lighter accent on hover */
+            opacity: 0.95;
+        }
+
+        /* 6. Status Message */
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* 7. Instructions Block */
+        .instructions {
+            background: #2c2c2c;
+            /* Darker background for instructions */
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-left: 4px solid var(--accent-color);
+            /* Accent border */
+        }
+
+        .instructions p {
+            margin: 5px 0;
+        }
+
+        .instructions a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .instructions a:hover {
+            text-decoration: underline;
+        }
+
+        .instructions strong {
+            color: var(--text-color);
+        }
+
+        /* ==================================== */
+        /* 8. FLOATING BACKGROUND ANIMATION */
+        /* ==================================== */
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            /* Place behind the .container */
+            pointer-events: none;
+            /* Allows clicks to pass through */
+        }
+
+        .background-animation li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(var(--accent-color), 0.1);
+            /* Subtle, transparent accent color */
+            color: rgba(255, 255, 255, 0.05);
+            /* Very faint white text */
+            font-size: 20px;
+            font-weight: bold;
+            bottom: -150px;
+            animation: animate 25s linear infinite;
+        }
+
+        /* Assign different animation delays and sizes to each item */
+        .background-animation li:nth-child(1) {
+            left: 10%;
+            width: 90px;
+            height: 90px;
+            animation-delay: 0s;
+        }
+
+        .background-animation li:nth-child(2) {
+            left: 20%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .background-animation li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .background-animation li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .background-animation li:nth-child(5) {
+            left: 65%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 7s;
+        }
+
+        .background-animation li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+            animation-duration: 30s;
+        }
+
+        .background-animation li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 8s;
+            animation-duration: 35s;
+        }
+
+        .background-animation li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 10s;
+            animation-duration: 15s;
+        }
+
+        /* Keyframe animation for movement */
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <h2>Set Your Gemini API Key</h2>
-  
-  <div class="instructions">
-    <p>This extension requires a **Gemini API Key** to translate problems.</p>
-    <p>
-      1. Get your key here: 
-      <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio (Gemini)</a>
-    </p>
-    <p>2. Enter and save the key below. We will validate it automatically.</p>
-  </div>
-  
-  <input type="text" id="apiKey" placeholder="Enter Gemini API Key (e.g., AIzaSy...)" />
-  <button id="saveKey">Save & Validate Key</button>
-  <div id="status"></div>
-  <script src="options.js"></script>
+    <ul class="background-animation">
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+        <li>LeetHelp</li>
+    </ul>
+
+    <div class="container">
+        <h2>LeetHelp</h2>
+
+        <div class="instructions">
+            <p>This extension requires a <b>Gemini API Key</b> to translate problems.</p>
+            <p>
+                1. Get your key here:
+                <a style="text-underline-position: below;" href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio (Gemini).</a>
+            </p>
+            <p>2. Enter and save the key below. We will validate it automatically.</p>
+        </div>
+
+        <input type="text" id="apiKey" placeholder="Enter Gemini API Key (e.g., AIzaSy...)" />
+        <button id="saveKey">Save & Validate Key</button>
+        <div id="status"></div>
+    </div>
+    <script src="options.js"></script>
 </body>
+
 </html>
