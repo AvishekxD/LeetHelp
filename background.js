@@ -1,16 +1,28 @@
-const MODEL_NAME = "gemini-2.5-flash-preview-05-20"; // Changed to the faster model
+const MODEL_NAME = "gemini-2.5-flash-preview-05-20";
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1000;
 
 /**
  * Makes the Gemini API call with exponential backoff and retry logic.
  */
-async function callGeminiApiWithRetry(apiKey, prompt) {
+async function callGeminiApiWithRetry(apiKey, userQuery) {
+  
+  // CRITICAL: Define the System Instruction to guide the model on preserving HTML elements.
+  const systemInstruction = `You are an expert technical translator. Your task is to translate the narrative text within the provided technical problem description into Hinglish (a mix of Hindi and English words, but use common, simple vocabulary and avoid complex Hindi characters or words).
+
+IMPORTANT RULES:
+1. Preserve the complete HTML/Markdown structure: You must keep all structural elements like <table>, <img>, <pre>, <ul>, <ol>, <h1>, <h2>, <p> and <code> tags exactly where they are.
+2. Do not translate any text within HTML attributes (like alt text, src URL) or inside <code> tags.
+3. Only translate the surrounding narrative, example explanations, and main problem text.
+4. The output must be valid HTML/Markdown that can render correctly. Do not add any extra introductory or concluding sentences.`;
+
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-    // Note: The API URL uses the faster MODEL_NAME now
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+    
+    // Construct payload with System Instruction and User Query
     const payload = {
-      contents: [{ parts: [{ text: prompt }] }]
+      contents: [{ parts: [{ text: userQuery }] }],
+      systemInstruction: { parts: [{ text: systemInstruction }] } 
     };
 
     try {
@@ -26,7 +38,7 @@ async function callGeminiApiWithRetry(apiKey, prompt) {
       } else if (response.status === 429 && attempt < MAX_RETRIES - 1) {
         // Rate limit exceeded, wait and retry
         const delay = BASE_DELAY_MS * Math.pow(2, attempt);
-        console.warn(`Rate limit (429) encountered. Retrying in ${delay / 1000}s...`);
+        // console.warn(`Rate limit (429) encountered. Retrying in ${delay / 1000}s...`); // Suppressed for clean console
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
       } else if (response.status === 401 || response.status === 403) {
@@ -59,9 +71,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
 
-      // --- SIMPLIFIED PROMPT HERE (No Hindi characters/complicated words) ---
-        const prompt = `Convert the following English technical text into Hinglish (a mixture of Hindi and English words but do not use hindi character and complicated hindi words.), maintaining the exact structure, paragraphs, and list formatting of the original. Do not add any introductory or concluding sentences. The goal is a direct language conversion only. The problem text is:\n\n${message.text}`;
-        const explanation = await callGeminiApiWithRetry(apiKey, prompt);
+      // message.text now contains the raw HTML
+      const userQuery = message.text; 
+      
+      const explanation = await callGeminiApiWithRetry(apiKey, userQuery);
 
       sendResponse({ result: explanation });
     });
