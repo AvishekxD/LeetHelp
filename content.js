@@ -186,6 +186,12 @@ function getTranslatedHtml(text) {
 /**
  * Updates the button's content, classes, and text for the given state.
  */
+let selectedLanguage = "Hinglish"; // Default language
+
+function getButtonText(language) {
+    return `Convert to ${language}`;
+}
+
 function updateButtonState(state) {
     if (!toggleBtn) return;
 
@@ -195,7 +201,7 @@ function updateButtonState(state) {
 
     switch (state) {
         case 'initial':
-            toggleBtn.innerHTML = `${SWAP_SVG_ICON}<span>${INITIAL_BTN_TEXT}</span>`;
+            toggleBtn.innerHTML = `${SWAP_SVG_ICON}<span>${getButtonText(selectedLanguage)}</span>`;
             isTranslated = false;
             break;
         case 'translated':
@@ -209,6 +215,20 @@ function updateButtonState(state) {
             toggleBtn.disabled = true;
             break;
     }
+}
+
+// Add this function to fetch the selected language
+function updateSelectedLanguage() {
+    chrome.storage.local.get(['selectedLanguage'], (data) => {
+        if (data.selectedLanguage) {
+            selectedLanguage = data.selectedLanguage;
+            // Update button text if it exists
+            const btn = document.getElementById("hinglish-toggle-btn");
+            if (btn && !isTranslated) {
+                btn.innerHTML = `${SWAP_SVG_ICON}<span>${getButtonText(selectedLanguage)}</span>`;
+            }
+        }
+    });
 }
 
 
@@ -336,7 +356,8 @@ function injectHinglishButton() {
     // Apply LeetCode styling classes
     toggleBtn.className = "relative inline-flex items-center justify-center text-caption px-2 py-1 gap-1 rounded-full bg-fill-secondary cursor-pointer transition-colors hover:bg-fill-primary hover:text-text-primary text-sd-secondary-foreground hover:opacity-80 whitespace-nowrap";
 
-    // Set initial state content
+    // Get the current selected language and set initial state
+    updateSelectedLanguage();
     updateButtonState('initial');
 
     // Determine injection point
@@ -351,6 +372,17 @@ function injectHinglishButton() {
     // Attach handler - only executed once
     toggleBtn.addEventListener("click", handleTranslation);
 }
+
+// Add listener for storage changes to update button text
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'local' && changes.selectedLanguage) {
+        selectedLanguage = changes.selectedLanguage.newValue;
+        const btn = document.getElementById("hinglish-toggle-btn");
+        if (btn && !isTranslated) {
+            btn.innerHTML = `${SWAP_SVG_ICON}<span>${getButtonText(selectedLanguage)}</span>`;
+        }
+    }
+});
 
 // Inject the custom CSS for the loading animation once
 injectLoadingStyle();
