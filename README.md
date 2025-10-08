@@ -12,9 +12,9 @@ _LeetHelp is a lightweight Chrome extension built to help students and developer
 ---
 
 ## 📌 Features
-- 📝 **One-click Hinglish translation** of LeetCode problem statements.  
-- 🔄 **Toggle button beside the "Hint" button** → switch between English and Hinglish.  
-- 📖 **Inline translation display** → Hinglish text appears right below the original problem statement.  
+- 📝 **One-click Hinglish(Selected Language) translation** of LeetCode problem statements.  
+- 🔄 **Toggle button beside the "Hint" button** → switch between English and Hinglish - (Selected language).  
+- 📖 **Inline translation display** → Hinglish - (Selected language) text appears right below the original problem statement.  
 - 💾 **Caching support** → no duplicate API calls for the same problem.  
 - ⚡ **Non-intrusive UI** → follows LeetCode’s styling to feel native.  
 
@@ -30,25 +30,32 @@ _LeetHelp is a lightweight Chrome extension built to help students and developer
 ## 📁 Folder Structure
 ```bash
 LeetHelp/
-│
-├── manifest.json          # Chrome extension manifest (v3)
-├── content.js             # Main script injected into LeetCode pages
-├── background.js          # Handles API requests, caching, messaging
-├── styles.css             # Custom CSS (button styling, translation box)
-├── icons/                 # Extension icons
+├── icons/
+│   ├── favicon.ico
 │   ├── icon16.png
 │   ├── icon48.png
-│   └── icon128.png
+│   ├── icon128.png
+│   ├── image.png
+│   ├── image-1.png
+│   └── image-2.png
 │
+├── .gitignore
+├── background.js          # Handles background logic and translation API requests
+├── content.js             # Injected into LeetCode pages to manipulate DOM and render translations
+├── manifest.json          # Chrome extension manifest configuration (v3)
+├── options.html           # Settings UI (API key + language selection)
+├── options.js             # Logic for saving and managing user settings
+├── popup.html             # Popup UI displayed on extension icon click
+├── popup.js               # Popup logic (trigger translation, display output)
 ├── README.md              # Project documentation
-└── .gitignore             # Ignore node_modules, build, etc.
+├── styles.css             # Global styles (for translation UI, popup, and options page)
 ```
 ---
 
 ## ✨ Future Ideas
-- 📌 Images of examples in our mode.
-- 🌙 Dark mode optimized UI. 
-- 📚 Multi-Language Support(for example - Runglish (Russian + English), Portuñol / Portenglish (Portuguese + English), Konglish (Korean + English)).
+- 📌 Images, Code, Inputs of examples in our mode. (Done ✅)
+- 🌙 Dark mode optimized UI. (Partially Done ...)
+- 📚 Multi-Language Support(for example - Runglish (Russian + English), Portuñol / Portenglish (Portuguese + English), Konglish (Korean + English)). (Done ✅)
 
 ---
 
