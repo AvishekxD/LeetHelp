@@ -1,8 +1,5 @@
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
 
-/**
- * Tests the provided API key with a simple API call.
- */
 async function validateApiKey(key) {
   const statusElement = document.getElementById("status");
   statusElement.innerText = "Validating key...";
@@ -15,33 +12,26 @@ async function validateApiKey(key) {
       body: JSON.stringify({
         contents: [{ parts: [{ text: "ping" }] }]
       }),
-      signal: AbortSignal.timeout(5000) 
+      signal: AbortSignal.timeout(5000)
     });
 
-    if (response.ok) {
-      return true;
-    } else if (response.status === 400) {
-        // 400 with a prompt error is acceptable (key is working but prompt is simple)
-        const result = await response.json();
-        if (result?.error?.message.includes("prompt")) {
-            return true;
-        }
-    }
-    
-    return false;
+    if (response.ok) return true;
 
-  } catch (error) {
-    if (error.name === 'AbortError') {
-        console.error("API validation timed out.");
-    } else {
-        console.error("API validation failed:", error);
+    if (response.status === 400) {
+      const result = await response.json();
+      if (result?.error?.message?.includes("prompt")) return true;
     }
+
+    return false;
+  } catch (error) {
+    console.error("API validation failed:", error);
     return false;
   }
 }
 
 document.getElementById("saveKey").addEventListener("click", async () => {
   const key = document.getElementById("apiKey").value.trim();
+  const selectedLanguage = document.getElementById("languageSelect").value;
   const statusElement = document.getElementById("status");
 
   if (!key) {
@@ -49,26 +39,29 @@ document.getElementById("saveKey").addEventListener("click", async () => {
     statusElement.style.color = "red";
     return;
   }
-  
+
   const isValid = await validateApiKey(key);
 
   if (isValid) {
-    chrome.storage.local.set({ geminiApiKey: key }, () => {
-      statusElement.innerText = "API Key saved and validated! You can close this tab.";
-      statusElement.style.color = "white";
-      
-      // Send message to background script to close the tab
-      chrome.runtime.sendMessage({ action: "keySavedAndValidated" });
-    });
+    chrome.storage.local.set(
+      { geminiApiKey: key, selectedLanguage },
+      () => {
+        statusElement.innerText =
+          "API Key saved and validated! You can close this tab.";
+        statusElement.style.color = "white";
+        chrome.runtime.sendMessage({ action: "keySavedAndValidated" });
+      }
+    );
   } else {
-    statusElement.innerText = "Invalid API Key. Please check your key and try again.";
+    statusElement.innerText = "Invalid API Key. Please check your key.";
     statusElement.style.color = "red";
   }
 });
 
-// Load existing key
-chrome.storage.local.get("geminiApiKey", (data) => {
-  if (data.geminiApiKey) {
+// Preload existing values
+chrome.storage.local.get(["geminiApiKey", "selectedLanguage"], (data) => {
+  if (data.geminiApiKey)
     document.getElementById("apiKey").value = data.geminiApiKey;
-  }
+  if (data.selectedLanguage)
+    document.getElementById("languageSelect").value = data.selectedLanguage;
 });

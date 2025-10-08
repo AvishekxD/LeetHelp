@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>LeetHelp</title>
     <link rel="icon" type="icon" href="/icons/favicon.ico">
@@ -268,12 +269,34 @@
             <p>This extension requires a <b>Gemini API Key</b> to translate problems.</p>
             <p>
                 1. Get your key here:
-                <a style="text-underline-position: below;" href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio (Gemini).</a>
+                <a style="text-underline-position: below;" href="https://makersuite.google.com/app/apikey"
+                    target="_blank">Google AI Studio (Gemini).</a>
             </p>
             <p>2. Enter and save the key below. We will validate it automatically.</p>
         </div>
 
         <input type="text" id="apiKey" placeholder="Enter Gemini API Key (e.g., AIzaSy...)" />
+
+        <!-- Language Selector -->
+        <label for="language" style="display:block;margin-bottom:6px;color:#f0f0f0;font-size:14px;">Select Language
+            Blend:</label>
+        <select id="languageSelect"
+            style="width:100%;padding:10px;border-radius:6px;background-color:#2c2c2c;color:#f0f0f0;border:1px solid #3c3c3c;margin-bottom:15px;">
+            <option value="Hinglish" selected>Hinglish (Hindi + English)</option>
+            <option value="Chinglish">Chinglish (Chinese + English)</option>
+            <option value="Japlish">Japlish (Japanese + English)</option>
+            <option value="Runglish">Runglish (Russian + English)</option>
+            <option value="Vienglish">Vienglish (Vietnamese + English)</option>
+            <option value="Benglish">Benglish (Bengali + English)</option>
+            <option value="Portinglish">Portinglish (Portuguese + English)</option>
+            <option value="Konglish">Konglish (Korean + English)</option>
+            <option value="Spanglish">Spanglish (Spanish + English)</option>
+            <option value="Taglish">Taglish (Tagalog + English)</option>
+            <option value="Franglais">Franglais (French + English)</option>
+            <option value="Itanglish">Itanglish (Italian + English)</option>
+            <option value="Gernglish">Gernglish (German + English)</option>
+        </select>
+
         <button id="saveKey">Save & Validate Key</button>
         <div id="status"></div>
     </div>
